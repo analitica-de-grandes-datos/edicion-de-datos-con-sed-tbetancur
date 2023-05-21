@@ -39,22 +39,4 @@
 #  ...
 #  2014-09-01,A,3,100.4
 #
-# Convierte el formato de las fechas de DD/MM/YY a YYYY-MM-DD.
-sed 's/\([0-9]\)[/]\([0-9]\)[/]\([0-9]\{4\}\)/0\1\-0\2\-\3/g
-     s/\([0-9]\{2\}\)[/]\([0-9]\{2\}\)[/]\([0-9]\{2\}\)/\1\-\2\-20\3/g
-     s/\([0-9]\{2\}\)[-]\([0-9]\{2\}\)[-]\([0-9]\{4\}\)/\3\-\2\-\1/g
-     s/a/A/g
-     s/c/C/g
-     s/n/N/g'
-
-# Transforma el archivo para que todos los campos nulos aparezcan como \N.
- sed 's/;;/;\N;/g
-     s/;N/;\\N/g
-     s/N;$/N;\\N/g'
-# Usa el . para indicar decimales.     
-sed 's/,/./g'
-
-# Reemplaza los ; por ,.
-sed 's/;/,/g'
-
-     data.csv > output.csv
+sed 's/\/20/\//g' data.csv | sed -E 's/^([0-9])\//0\1\//;s/^([0-9]{2})\/([0-9])\//\1\/0\2\//;' | sed 's/^\([0-9][0-9]\)\/\([0-9][0-9]\)\/\([0-9][0-9]\)/20\3-\2-\1/g' | sed 's/,/./g' | sed 's/;/,/g; s/n/N/g' | sed -E 's/,N/,\\N/g' | sed 's/,,/,\\N,/g; s/,\s*$/,\\N/g; s/a/A/g; s/c/C/g'
